@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { getAttendanceData } from '@/data/attendance';
 import PageHeader from '@/components/ui/PageHeader';
 import { cookies } from 'next/headers';

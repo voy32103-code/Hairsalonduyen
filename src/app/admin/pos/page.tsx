@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import PageHeader from '@/components/ui/PageHeader';
 import POSLayout from '@/components/pos/POSLayout';
 import { getAppointmentsData } from '@/data/appointments';

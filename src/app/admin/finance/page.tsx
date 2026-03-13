@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { getFinanceData } from '@/data/finance';
 import FinanceClient from '@/components/finance/FinanceClient';
 import { cookies } from 'next/headers';

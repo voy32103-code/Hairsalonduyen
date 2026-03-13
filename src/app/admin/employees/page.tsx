@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { getEmployeesData } from '@/data/employees';
 import AddEmployeeModal from '@/components/employees/AddEmployeeModal';
 import EmployeeTable from '@/components/employees/EmployeeTable';

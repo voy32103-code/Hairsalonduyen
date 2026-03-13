@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { getDashboardData } from '@/data/dashboard';
 import Link from 'next/link';
 

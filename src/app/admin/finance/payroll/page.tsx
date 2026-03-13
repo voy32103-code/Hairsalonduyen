@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { getPayrollData } from '@/data/payroll';
 import PageHeader from '@/components/ui/PageHeader';
 import PayrollTable from '@/components/finance/PayrollTable';

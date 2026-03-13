@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { getCustomers, getCustomerStats } from '@/data/customers';
 import CustomerClient from '@/components/customers/CustomerClient';
 import PageHeader from '@/components/ui/PageHeader';

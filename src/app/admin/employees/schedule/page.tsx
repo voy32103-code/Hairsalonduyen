@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { getSchedulesData } from '@/data/schedules';
 import PageHeader from '@/components/ui/PageHeader';
 import ScheduleCalendar from '@/components/employees/ScheduleCalendar';

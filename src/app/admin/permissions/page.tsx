@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { getRolesData } from '@/data/permissions';
 import { cookies } from 'next/headers';
 import PermissionsClient from '@/components/permissions/PermissionsClient';

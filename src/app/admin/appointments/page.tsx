@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { getAppointmentsData } from '@/data/appointments';
 import { getActiveServices } from '@/data/services';
 import AddAppointmentModal from '@/components/appointments/AddAppointmentModal';

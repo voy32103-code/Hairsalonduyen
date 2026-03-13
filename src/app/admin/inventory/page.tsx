@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { getInventoryData } from '@/data/inventory';
 import AddInventoryModal from '@/components/inventory/AddInventoryModal';
 import InventoryGrid from '@/components/inventory/InventoryGrid';

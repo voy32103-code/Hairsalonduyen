@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { getServicesData } from '@/data/services';
 import PageHeader from '@/components/ui/PageHeader';
 import ServiceTable from '@/components/services/ServiceTable';

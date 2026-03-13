@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { getSettingsData } from '@/data/settings';
 import SettingsForm from '@/components/settings/SettingsForm';
 import PageHeader from '@/components/ui/PageHeader';
