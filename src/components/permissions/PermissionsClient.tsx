@@ -142,7 +142,7 @@ export default function PermissionsClient({ roles: initialRoles }: { roles: Role
                     </h3>
                 </div>
 
-                <div className="glass-card rounded-2xl overflow-hidden border border-white/5 shadow-2xl">
+                <div className="glass-card rounded-2xl overflow-x-auto border border-white/5 shadow-2xl">
                     <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className="bg-white/[0.03]">

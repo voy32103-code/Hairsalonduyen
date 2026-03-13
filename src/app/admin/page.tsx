@@ -23,7 +23,7 @@ export default async function DashboardPage() {
     return (
         <>
             {/* KPI Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
                 <Link href="/admin/finance/invoices" className="glass-card p-5 rounded-2xl smooth-transition hover:bg-white/5 block group">
                     <div className="flex justify-between items-start mb-4">
                         <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-background-dark transition-colors">

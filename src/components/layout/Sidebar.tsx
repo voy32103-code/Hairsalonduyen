@@ -56,7 +56,7 @@ const STAFF_NAV = [
     },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ isOpen, onClose }: { isOpen?: boolean; onClose?: () => void }) {
     const pathname = usePathname();
     const [userRole, setUserRole] = useState<'admin' | 'staff'>('admin');
 
@@ -77,9 +77,17 @@ export default function Sidebar() {
     }
 
     return (
-        <aside className="w-64 flex-shrink-0 flex flex-col min-h-screen bg-[rgba(17,24,39,0.70)] border-r border-white/5 py-8">
+        <aside className={`fixed inset-y-0 left-0 z-50 w-64 flex-shrink-0 flex flex-col bg-[rgba(17,24,39,0.95)] backdrop-blur-xl border-r border-white/5 py-8 transition-transform duration-300 lg:static lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+            {/* Mobile Close Button */}
+            <button 
+                onClick={onClose}
+                className="absolute top-4 right-4 lg:hidden w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-slate-500 hover:text-rose-400"
+            >
+                <span className="material-symbols-outlined text-[20px]">close</span>
+            </button>
+
             {/* Role badge */}
-            <div className="px-6 mb-6">
+            <div className="px-6 mb-6 mt-4 lg:mt-0">
                 <div className={`flex items-center gap-3 px-4 py-3 rounded-2xl border text-xs font-black uppercase tracking-wider ${userRole === 'admin' ? 'bg-primary/10 border-primary/20 text-primary shadow-lg shadow-primary/5' : 'bg-blue-500/10 border-blue-500/20 text-blue-400 shadow-lg shadow-blue-500/5'}`}>
                     <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${userRole === 'admin' ? 'bg-primary/20' : 'bg-blue-500/20'}`}>
                         <span className="material-symbols-outlined text-lg">

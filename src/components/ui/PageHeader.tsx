@@ -9,7 +9,7 @@ interface PageHeaderProps {
 
 export default function PageHeader({ breadcrumbItems, title, description, actionElement }: PageHeaderProps) {
     return (
-        <div className="flex items-end justify-between mb-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
             <div>
                 {breadcrumbItems && breadcrumbItems.length > 0 && (
                     <nav className="flex gap-2 text-xs font-semibold text-slate-500 mb-2 uppercase tracking-widest">

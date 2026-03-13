@@ -13,7 +13,13 @@ interface NotifItem {
     link?: string;
 }
 
-export default function Header({ initialActiveSession }: { initialActiveSession?: any }) {
+export default function Header({ 
+    initialActiveSession,
+    onMenuToggle
+}: { 
+    initialActiveSession?: any;
+    onMenuToggle?: () => void;
+}) {
     const [notifs, setNotifs] = useState<NotifItem[]>([]);
     const [showNotifs, setShowNotifs] = useState(false);
     const [showUserMenu, setShowUserMenu] = useState(false);
@@ -142,17 +148,23 @@ export default function Header({ initialActiveSession }: { initialActiveSession?
     const unreadCount = notifs.filter(n => n.unread).length;
 
     return (
-        <header className="flex items-center justify-between px-8 py-4 sticky top-0 z-50 bg-[rgba(17,24,39,0.85)] backdrop-blur-xl border-b border-white/5">
-            {/* Logo */}
-            <div className="flex items-center gap-3 w-1/3">
-                <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center text-background-dark shadow-lg shadow-primary/30">
+        <header className="flex items-center justify-between px-4 md:px-8 py-4 sticky top-0 z-50 bg-[rgba(17,24,39,0.85)] backdrop-blur-xl border-b border-white/5">
+            {/* Left: Menu Toggle (Mobile) & Logo */}
+            <div className="flex items-center gap-3 w-1/2 lg:w-1/3">
+                <button 
+                    onClick={onMenuToggle}
+                    className="lg:hidden w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-primary transition-colors"
+                >
+                    <span className="material-symbols-outlined">menu</span>
+                </button>
+                <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center text-background-dark shadow-lg shadow-primary/30 flex-shrink-0">
                     <span className="material-symbols-outlined text-xl">content_cut</span>
                 </div>
-                <h1 className="text-lg font-black tracking-wide text-white">DuyenHairSalon</h1>
+                <h1 className="text-sm md:text-lg font-black tracking-wide text-white truncate">DuyenHairSalon</h1>
             </div>
 
-            {/* Search */}
-            <div className="w-1/3 flex justify-center">
+            {/* Search - Hidden on mobile, shown on lg */}
+            <div className="hidden lg:flex w-1/3 justify-center">
                 <form onSubmit={handleSearch} className="relative w-full max-w-sm">
                     <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xl">search</span>
                     <input
@@ -166,10 +178,10 @@ export default function Header({ initialActiveSession }: { initialActiveSession?
             </div>
 
             {/* Right actions */}
-            <div className="flex items-center justify-end gap-3 w-1/3">
-                {/* Dark mode toggle */}
-                {/* Attendance Widget */}
-                <AttendanceWidget activeSession={activeSession} />
+            <div className="flex items-center justify-end gap-2 md:gap-3 w-1/2 lg:w-1/3">
+                <div className="hidden sm:block">
+                    <AttendanceWidget activeSession={activeSession} />
+                </div>
 
 
 
