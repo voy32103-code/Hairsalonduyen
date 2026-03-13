@@ -10,9 +10,9 @@ export default async function AdminLayout({
 }) {
     const user = await getSessionUser();
     
-    // Force re-login if session is invalidated (multi-device login)
+    // Force re-login and clear cookies if session is invalidated (multi-device login)
     if (!user) {
-        redirect('/login');
+        redirect('/api/auth/logout');
     }
 
     const activeSession = await getActiveAttendance();

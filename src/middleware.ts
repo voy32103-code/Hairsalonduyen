@@ -14,13 +14,9 @@ export function middleware(request: NextRequest) {
         }
     }
 
-    // Already logged in, redirect from /login to /admin
-    if (pathname === '/login') {
-        const session = request.cookies.get('session');
-        if (session && session.value) {
-            return NextResponse.redirect(new URL('/admin', request.url));
-        }
-    }
+    // We removed the automatic /login -> /admin redirect to prevent infinite loops 
+    // when a session is invalidated by the server but the cookie still exists.
+    // The user will just see the login form and can re-authenticate.
 
     return NextResponse.next();
 }
