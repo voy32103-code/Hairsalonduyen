@@ -46,7 +46,6 @@ const STAFF_NAV = [
             { href: '/admin/appointments', icon: 'calendar_month', label: 'Lịch hẹn' },
             { href: '/admin/customers', icon: 'person', label: 'Khách hàng' },
             { href: '/admin/employees/schedule', icon: 'event_note', label: 'Lịch làm việc' },
-            { href: '/admin/employees/attendance', icon: 'assignment_turned_in', label: 'Chấm công' },
             { href: '/admin/inventory', icon: 'inventory_2', label: 'Kho hàng' },
         ]
     },
