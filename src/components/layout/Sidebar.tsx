@@ -81,11 +81,16 @@ export default function Sidebar() {
         <aside className="w-64 flex-shrink-0 flex flex-col min-h-screen bg-[rgba(17,24,39,0.70)] border-r border-white/5 py-8">
             {/* Role badge */}
             <div className="px-6 mb-6">
-                <div className={`flex items-center gap-2 px-3 py-2 rounded-xl border text-xs font-black uppercase tracking-wider ${userRole === 'admin' ? 'bg-primary/10 border-primary/20 text-primary' : 'bg-blue-500/10 border-blue-500/20 text-blue-400'}`}>
-                    <span className="material-symbols-outlined text-base">
-                        {userRole === 'admin' ? 'admin_panel_settings' : 'badge'}
-                    </span>
-                    {userRole === 'admin' ? 'Hệ thống Admin' : 'Nhân viên (Staff)'}
+                <div className={`flex items-center gap-3 px-4 py-3 rounded-2xl border text-xs font-black uppercase tracking-wider ${userRole === 'admin' ? 'bg-primary/10 border-primary/20 text-primary shadow-lg shadow-primary/5' : 'bg-blue-500/10 border-blue-500/20 text-blue-400 shadow-lg shadow-blue-500/5'}`}>
+                    <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${userRole === 'admin' ? 'bg-primary/20' : 'bg-blue-500/20'}`}>
+                        <span className="material-symbols-outlined text-lg">
+                            {userRole === 'admin' ? 'admin_panel_settings' : 'badge'}
+                        </span>
+                    </div>
+                    <div className="flex flex-col">
+                        <span className="text-[9px] opacity-60">Vai trò</span>
+                        <span className="leading-tight">{userRole === 'admin' ? 'Hệ thống Admin' : 'Nhân viên'}</span>
+                    </div>
                 </div>
             </div>
 
@@ -122,10 +127,15 @@ export default function Sidebar() {
 
             {/* Footer help */}
             <div className="px-6 mt-6">
-                <div className="p-3 rounded-xl bg-primary/5 border border-primary/10 text-center">
-                    <span className="material-symbols-outlined text-primary text-2xl block mb-1">content_cut</span>
-                    <p className="text-white text-xs font-bold">DuyenHairSalon</p>
-                    <p className="text-slate-600 text-[10px]">© 2025 Admin v1.0</p>
+                <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/5 text-center relative overflow-hidden group">
+                    <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    <div className="relative z-10">
+                        <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-500">
+                            <span className="material-symbols-outlined text-primary text-2xl animate-pulse">content_cut</span>
+                        </div>
+                        <p className="text-white text-sm font-black tracking-tighter">DuyenHairSalon</p>
+                        <p className="text-slate-600 text-[10px] mt-1">Version 1.0.4 • Stable</p>
+                    </div>
                 </div>
             </div>
         </aside>

@@ -106,7 +106,7 @@ export default function AppointmentTable({ appointments, userRole = 'admin' }: P
                                     <td className="px-6 py-5 text-right font-bold text-primary">{formatCurrency(appt.price)}</td>
                                     <td className="px-6 py-5 text-center">
                                         {userRole === 'admin' ? (
-                                            <div className="flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <div className="flex items-center justify-center gap-2 opacity-40 group-hover:opacity-100 transition-opacity">
                                                 {/* Edit status */}
                                                 <div className="relative">
                                                     <button

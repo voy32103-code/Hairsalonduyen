@@ -14,7 +14,6 @@ interface NotifItem {
 }
 
 export default function Header({ initialActiveSession }: { initialActiveSession?: any }) {
-    const [isDark, setIsDark] = useState(true);
     const [notifs, setNotifs] = useState<NotifItem[]>([]);
     const [showNotifs, setShowNotifs] = useState(false);
     const [showUserMenu, setShowUserMenu] = useState(false);
@@ -28,17 +27,7 @@ export default function Header({ initialActiveSession }: { initialActiveSession?
     const pathname = usePathname();
     const router = useRouter();
 
-    // Init dark mode from localStorage on first render
-    useEffect(() => {
-        const saved = localStorage.getItem('theme');
-        const dark = saved !== 'light';
-        setIsDark(dark);
-        if (dark) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    }, []);
+
 
     // Read user info from cookies
     useEffect(() => {
@@ -136,16 +125,7 @@ export default function Header({ initialActiveSession }: { initialActiveSession?
 
     useEffect(() => { setShowNotifs(false); setShowUserMenu(false); }, [pathname]);
 
-    function toggleDark() {
-        const next = !isDark;
-        setIsDark(next);
-        if (next) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-        localStorage.setItem('theme', next ? 'dark' : 'light');
-    }
+
 
     function handleSearch(e: React.FormEvent) {
         e.preventDefault();
@@ -191,14 +171,7 @@ export default function Header({ initialActiveSession }: { initialActiveSession?
                 {/* Attendance Widget */}
                 <AttendanceWidget activeSession={activeSession} />
 
-                {/* Dark mode toggle */}
-                <button
-                    onClick={toggleDark}
-                    title={isDark ? 'Light Mode' : 'Dark Mode'}
-                    className="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-primary hover:border-primary/30 transition-all"
-                >
-                    <span className="material-symbols-outlined text-[20px]">{isDark ? 'light_mode' : 'dark_mode'}</span>
-                </button>
+
 
                 {/* Notifications */}
                 <div ref={notifRef} className="relative">
