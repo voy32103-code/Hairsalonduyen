@@ -128,7 +128,7 @@ export default function Sidebar() {
             {/* Footer help */}
             <div className="px-6 mt-6">
                 <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/5 text-center relative overflow-hidden group">
-                    <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    <div className="absolute inset-0 bg-primary/5 opacity-100 transition-opacity duration-500" />
                     <div className="relative z-10">
                         <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-500">
                             <span className="material-symbols-outlined text-primary text-2xl animate-pulse">content_cut</span>
