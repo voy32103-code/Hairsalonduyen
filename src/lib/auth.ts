@@ -15,14 +15,14 @@ export async function getSessionUser(): Promise<UserSession | null> {
     try {
         const cookieStore = await cookies();
         const userId = cookieStore.get('user_id')?.value;
-        const session = cookieStore.get('session')?.value;
+        const sessionToken = cookieStore.get('session')?.value;
 
-        if (!userId || session !== 'authenticated') {
+        if (!userId || !sessionToken) {
             return null;
         }
 
         const userRes = await pool.query(`
-            SELECT u.id, u.full_name, u.email, r.name as role
+            SELECT u.id, u.full_name, u.email, r.name as role, u.session_token
             FROM users u
             JOIN roles r ON u.role_id = r.id
             WHERE u.id = $1
@@ -30,7 +30,10 @@ export async function getSessionUser(): Promise<UserSession | null> {
         `, [userId]);
 
         const user = userRes.rows[0];
-        if (!user) return null;
+        // Validate session token match
+        if (!user || user.session_token !== sessionToken) {
+            return null;
+        }
 
         return {
             id: user.id,

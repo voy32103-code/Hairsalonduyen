@@ -7,7 +7,7 @@ export function middleware(request: NextRequest) {
     // Check if accessing admin routes
     if (pathname.startsWith('/admin')) {
         const session = request.cookies.get('session');
-        if (!session || session.value !== 'authenticated') {
+        if (!session || !session.value) {
             const loginUrl = new URL('/login', request.url);
             loginUrl.searchParams.set('from', pathname);
             return NextResponse.redirect(loginUrl);
@@ -17,7 +17,7 @@ export function middleware(request: NextRequest) {
     // Already logged in, redirect from /login to /admin
     if (pathname === '/login') {
         const session = request.cookies.get('session');
-        if (session && session.value === 'authenticated') {
+        if (session && session.value) {
             return NextResponse.redirect(new URL('/admin', request.url));
         }
     }

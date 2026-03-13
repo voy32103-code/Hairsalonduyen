@@ -21,13 +21,18 @@ export async function POST(request: NextRequest) {
         `, [email, password]);
 
         const user = userRes.rows[0];
-
         if (!user) {
             return NextResponse.json({ success: false, message: 'Email hoặc mật khẩu không đúng.' }, { status: 401 });
         }
 
+        // Generate a new session token to force single-device login
+        const sessionToken = crypto.randomUUID();
+        
+        // Update database with the new token
+        await pool.query('UPDATE users SET session_token = $1 WHERE id = $2', [sessionToken, user.id]);
+
         const response = NextResponse.json({ success: true, role: user.role });
-        response.cookies.set('session', 'authenticated', {
+        response.cookies.set('session', sessionToken, {
             httpOnly: true,
             path: '/',
             maxAge: 60 * 60 * 24, // 24 hours
