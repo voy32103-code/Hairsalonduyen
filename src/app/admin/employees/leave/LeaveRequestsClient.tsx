@@ -8,6 +8,7 @@ export default function LeaveRequestsClient({ initialRequests, isAdminOrManager 
     const [requests, setRequests] = useState<LeaveRequest[]>(initialRequests);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [actionLoading, setActionLoading] = useState<string | null>(null);
     const [error, setError] = useState('');
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -16,23 +17,44 @@ export default function LeaveRequestsClient({ initialRequests, isAdminOrManager 
         setError('');
         const formData = new FormData(e.currentTarget);
         
+        console.log('--- Creating leave request ---');
         const res = await createLeaveRequest(formData);
         if (res.success) {
+            console.log('Leave request created successfully');
             setIsModalOpen(false);
             window.location.reload(); // Refresh to get the latest list from server
         } else {
+            console.error('Failed to create leave request:', res.message);
             setError(res.message || 'Lỗi');
         }
         setLoading(false);
     };
 
     const handleUpdateStatus = async (id: string, status: 'approved' | 'rejected') => {
+        // console.log('Button clicked for ID:', id); 
         if (!confirm(`Bạn chắc chắn muốn ${status === 'approved' ? 'duyệt' : 'từ chối'} đơn này?`)) return;
-        const res = await updateLeaveStatus(id, status);
-        if (res.success) {
-            setRequests(requests.map(r => r.id === id ? { ...r, status } : r));
-        } else {
-            alert(res.message);
+        
+        console.log(`--- Updating leave request: ${id} to ${status} ---`);
+        setActionLoading(id);
+        setError('');
+        
+        try {
+            const res = await updateLeaveStatus(id, status);
+            
+            if (res.success) {
+                console.log('Update successful, refreshing state');
+                setRequests(prev => prev.map(r => r.id === id ? { ...r, status } : r));
+                // Optional: alert('Cập nhật thành công');
+            } else {
+                console.error('Update failed:', res.message);
+                alert('Lỗi: ' + res.message);
+                setError(res.message || 'Lỗi khi cập nhật trạng thái.');
+            }
+        } catch (err: any) {
+            console.error('Client error during update:', err);
+            alert('Lỗi hệ thống khi cập nhật: ' + err.message);
+        } finally {
+            setActionLoading(null);
         }
     };
 
@@ -84,11 +106,27 @@ export default function LeaveRequestsClient({ initialRequests, isAdminOrManager 
                                         <td className="p-4 text-right flex justify-end gap-2">
                                             {req.status === 'pending' && (
                                                 <>
-                                                    <button onClick={() => handleUpdateStatus(req.id, 'approved')} className="p-2 bg-emerald-500/10 text-emerald-400 rounded-lg hover:bg-emerald-500/20">
-                                                        <span className="material-symbols-outlined text-sm">check</span>
+                                                    <button 
+                                                        onClick={() => handleUpdateStatus(req.id, 'approved')} 
+                                                        disabled={actionLoading === req.id}
+                                                        className="p-2 bg-emerald-500/10 text-emerald-400 rounded-lg hover:bg-emerald-500/20 disabled:opacity-50"
+                                                    >
+                                                        {actionLoading === req.id ? (
+                                                            <div className="w-5 h-5 border-2 border-emerald-400/30 border-t-emerald-400 rounded-full animate-spin"></div>
+                                                        ) : (
+                                                            <span className="material-symbols-outlined text-sm">check</span>
+                                                        )}
                                                     </button>
-                                                    <button onClick={() => handleUpdateStatus(req.id, 'rejected')} className="p-2 bg-rose-500/10 text-rose-400 rounded-lg hover:bg-rose-500/20">
-                                                        <span className="material-symbols-outlined text-sm">close</span>
+                                                    <button 
+                                                        onClick={() => handleUpdateStatus(req.id, 'rejected')} 
+                                                        disabled={actionLoading === req.id}
+                                                        className="p-2 bg-rose-500/10 text-rose-400 rounded-lg hover:bg-rose-500/20 disabled:opacity-50"
+                                                    >
+                                                        {actionLoading === req.id ? (
+                                                            <div className="w-5 h-5 border-2 border-rose-400/30 border-t-rose-400 rounded-full animate-spin"></div>
+                                                        ) : (
+                                                            <span className="material-symbols-outlined text-sm">close</span>
+                                                        )}
                                                     </button>
                                                 </>
                                             )}

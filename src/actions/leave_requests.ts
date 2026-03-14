@@ -32,17 +32,27 @@ export async function createLeaveRequest(formData: FormData) {
 
 export async function updateLeaveStatus(id: string, status: 'approved' | 'rejected') {
     try {
+        console.log(`[ACTION] updateLeaveStatus: id=${id}, status=${status}`);
+        const user = await getSessionUser();
+        console.log(`[ACTION] User role: ${user?.role}, ID: ${user?.id}`);
+        
         await authorize('employees', 'edit'); 
+        console.log('[ACTION] Authorization successful');
 
-        await pool.query(
+        const result = await pool.query(
             'UPDATE leave_requests SET status = $1::leave_status, updated_at = NOW() WHERE id = $2',
             [status, id]
         );
+        console.log(`[ACTION] Update completed. Rows affected: ${result.rowCount}`);
+
+        if (result.rowCount === 0) {
+            return { success: false, message: 'Không tìm thấy đơn nghỉ phép để cập nhật.' };
+        }
 
         revalidatePath('/admin/employees/leave');
         return { success: true };
     } catch (error: any) {
-        console.error('Failed to update leave status:', error);
+        console.error('[ACTION] Failed to update leave status:', error);
         return { success: false, message: error.message || 'Lỗi khi cập nhật trạng thái đơn nghỉ phép.' };
     }
 }

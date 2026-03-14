@@ -80,8 +80,8 @@ export async function createInvoice(data: {
                     
                     for (let i = 0; i < item.quantity; i++) {
                         await client.query(
-                            `INSERT INTO customer_packages (customer_id, package_id, remaining_credits, expiry_date) 
-                             VALUES ($1, $2, $3, $4)`,
+                            `INSERT INTO customer_prepaid_packages (customer_id, package_id, total_credits, used_credits, remaining_credits, expiry_date) 
+                             VALUES ($1, $2, $3, 0, $3, $4)`,
                             [data.customerId, item.packageId, pkg.total_credits, expiryDate]
                         );
                     }
@@ -104,7 +104,11 @@ export async function createInvoice(data: {
             // If it's a package redemption, decrement remaining_credits
             if (item.customerPackageId) {
                 const updRes = await client.query(
-                    "UPDATE customer_packages SET remaining_credits = remaining_credits - 1, status = CASE WHEN remaining_credits - 1 <= 0 THEN 'exhausted' ELSE status END WHERE id = $1 AND remaining_credits > 0 RETURNING id",
+                    `UPDATE customer_prepaid_packages 
+                     SET used_credits = used_credits + 1, 
+                         remaining_credits = remaining_credits - 1 
+                     WHERE id = $1 AND remaining_credits > 0 
+                     RETURNING id`,
                     [item.customerPackageId]
                 );
                 if (updRes.rows.length === 0) {
