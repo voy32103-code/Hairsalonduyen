@@ -129,7 +129,7 @@ export default function ServiceTable({ initialServices, userRole }: { initialSer
                     tabIndex={0}
                     aria-label="Đóng cửa sổ"
                 >
-                    <div className="glass-card w-full max-w-lg rounded-2xl border border-white/10 shadow-2xl p-8 cursor-default" onClick={e => e.stopPropagation()}>
+                    <div className="glass-card w-full max-w-lg rounded-2xl border border-white/10 shadow-2xl p-8 cursor-default" onClick={e => e.stopPropagation()} onKeyDown={e => e.stopPropagation()}>
                         <div className="flex items-center justify-between mb-8">
                             <h3 className="text-2xl font-black text-white">{editItem ? 'Cập nhật Dịch vụ' : 'Thêm Dịch vụ mới'}</h3>
                             <button onClick={() => setIsModalOpen(false)} className="text-slate-500 hover:text-white"><span className="material-symbols-outlined text-2xl">close</span></button>

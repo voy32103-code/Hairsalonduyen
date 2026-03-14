@@ -105,8 +105,19 @@ export default function EmployeeTable({ employees }: { employees: Employee[] }) 
 
             {/* Detail slide-over */}
             {detailItem && (
-                <div className="fixed inset-0 z-50 flex justify-end" onClick={() => setDetailItem(null)}>
-                    <div className="w-full max-w-md h-full glass-card border-l border-white/10 shadow-2xl overflow-y-auto" onClick={e => e.stopPropagation()}>
+                <div 
+                    className="fixed inset-0 z-50 flex justify-end bg-black/70 backdrop-blur-sm cursor-pointer" 
+                    onClick={() => setDetailItem(null)}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+                            setDetailItem(null);
+                        }
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    aria-label="Đóng cửa sổ"
+                >
+                    <div className="w-full max-w-md h-full glass-card border-l border-white/10 shadow-2xl overflow-y-auto cursor-default" onClick={e => e.stopPropagation()} onKeyDown={e => e.stopPropagation()}>
                         <div className="p-8">
                             <div className="flex items-center justify-between mb-8">
                                 <h3 className="text-xl font-black text-white">Chi tiết nhân viên</h3>
@@ -152,8 +163,19 @@ export default function EmployeeTable({ employees }: { employees: Employee[] }) 
 
             {/* Delete confirm */}
             {confirmDeleteId && (
-                <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 backdrop-blur-sm" onClick={() => setConfirmDeleteId(null)}>
-                    <div className="glass-card w-full max-w-sm rounded-2xl border border-white/10 p-8 text-center" onClick={e => e.stopPropagation()}>
+                <div 
+                    className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 backdrop-blur-sm cursor-pointer" 
+                    onClick={() => setConfirmDeleteId(null)}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+                            setConfirmDeleteId(null);
+                        }
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    aria-label="Đóng cửa sổ"
+                >
+                    <div className="glass-card w-full max-w-sm rounded-2xl border border-white/10 p-8 text-center cursor-default" onClick={e => e.stopPropagation()} onKeyDown={e => e.stopPropagation()}>
                         <span className="material-symbols-outlined text-5xl text-rose-400 mb-4 block">person_remove</span>
                         <h3 className="text-xl font-black text-white mb-2">Xóa nhân viên?</h3>
                         <p className="text-slate-400 text-sm mb-6">Thao tác này không thể hoàn tác.</p>

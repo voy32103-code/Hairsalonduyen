@@ -149,7 +149,7 @@ export default function InventoryGrid({ items: initialItems, userRole = 'admin' 
                     tabIndex={0}
                     aria-label="Đóng cửa sổ"
                 >
-                    <div className="glass-card w-full max-w-sm rounded-2xl border border-white/10 p-8 cursor-default" onClick={e => e.stopPropagation()}>
+                    <div className="glass-card w-full max-w-sm rounded-2xl border border-white/10 p-8 cursor-default" onClick={e => e.stopPropagation()} onKeyDown={e => e.stopPropagation()}>
                         <div className="flex items-center justify-between mb-6">
                             <h3 className="text-xl font-black text-white">Cập nhật số lượng</h3>
                             <button onClick={() => setEditItem(null)} className="text-slate-500 hover:text-white"><span className="material-symbols-outlined">close</span></button>
@@ -190,7 +190,7 @@ export default function InventoryGrid({ items: initialItems, userRole = 'admin' 
                     tabIndex={0}
                     aria-label="Đóng cửa sổ"
                 >
-                    <div className="glass-card w-full max-w-sm rounded-2xl border border-white/10 p-8 text-center cursor-default" onClick={e => e.stopPropagation()}>
+                    <div className="glass-card w-full max-w-sm rounded-2xl border border-white/10 p-8 text-center cursor-default" onClick={e => e.stopPropagation()} onKeyDown={e => e.stopPropagation()}>
                         <span className="material-symbols-outlined text-5xl text-rose-400 mb-4 block">delete_forever</span>
                         <h3 className="text-xl font-black text-white mb-2">Xóa sản phẩm?</h3>
                         <p className="text-slate-400 text-sm mb-6">Thao tác này không thể hoàn tác.</p>

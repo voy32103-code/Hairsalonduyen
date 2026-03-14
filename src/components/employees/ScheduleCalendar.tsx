@@ -119,15 +119,33 @@ export default function ScheduleCalendar({
                     return (
                         <div key={day} 
                              onClick={() => handleDayClick(day)}
-                             className={`bg-[#111827] min-h-32 p-3 transition-colors border-t border-transparent
+                             onKeyDown={(e) => {
+                                 if (e.key === 'Enter' || e.key === ' ') {
+                                     handleDayClick(day);
+                                 }
+                             }}
+                             role="button"
+                             tabIndex={0}
+                             aria-label={`Ngày ${day}`}
+                             className={`bg-[#111827] min-h-32 p-3 transition-colors border-t border-transparent outline-none focus:bg-white/5
                                 ${isManager ? 'cursor-pointer hover:bg-white/5' : ''}
                                 ${isToday ? 'border-primary shadow-[inset_0_2px_0_0_rgba(167,139,250,1)]' : ''}`}>
                             <div className={`text-xs font-bold mb-2 ${isToday ? 'text-primary' : 'text-slate-500'}`}>{day}</div>
                             <div className="space-y-1">
                                 {daySchedules.map(s => (
                                     <div key={s.id} 
-                                         className={`text-[10px] p-1.5 rounded flex flex-col font-medium ${getStatusColor(s.status)}`}
-                                         onClick={(e) => { e.stopPropagation(); if(isManager) handleDelete(s.id); }}>
+                                         className={`text-[10px] p-1.5 rounded flex flex-col font-medium cursor-pointer ${getStatusColor(s.status)}`}
+                                         onClick={(e) => { e.stopPropagation(); if(isManager) handleDelete(s.id); }}
+                                         onKeyDown={(e) => {
+                                             if (e.key === 'Enter' || e.key === ' ') {
+                                                 e.stopPropagation();
+                                                 if(isManager) handleDelete(s.id);
+                                             }
+                                         }}
+                                         role="button"
+                                         tabIndex={0}
+                                         aria-label={`Xóa ca làm của ${s.employee_name}`}
+                                         title={`Xóa ca làm của ${s.employee_name}`}>
                                         <span className="font-bold truncate" title={s.employee_name}>{s.employee_name}</span>
                                         <span className="opacity-90">{s.shift_start.slice(0,5)} - {s.shift_end.slice(0,5)}</span>
                                     </div>
@@ -140,8 +158,19 @@ export default function ScheduleCalendar({
 
             {/* Add Shift Modal */}
             {isAddModalOpen && selectedDate && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" onClick={() => setIsAddModalOpen(false)}>
-                    <div className="glass-card w-full max-w-md rounded-2xl border border-white/10 shadow-2xl p-8" onClick={e => e.stopPropagation()}>
+                <div 
+                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm cursor-pointer" 
+                    onClick={() => setIsAddModalOpen(false)}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+                            setIsAddModalOpen(false);
+                        }
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    aria-label="Đóng cửa sổ"
+                >
+                    <div className="glass-card w-full max-w-md rounded-2xl border border-white/10 shadow-2xl p-8 cursor-default" onClick={e => e.stopPropagation()} onKeyDown={e => e.stopPropagation()}>
                         <div className="flex items-center justify-between mb-8">
                             <div>
                                 <h3 className="text-2xl font-black text-white">Thêm ca làm việc</h3>

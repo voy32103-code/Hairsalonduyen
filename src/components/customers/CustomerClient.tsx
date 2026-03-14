@@ -204,8 +204,19 @@ export default function CustomerClient({ customers: initialCustomers }: Props) {
 
             {/* Add Modal */}
             {isAddOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" onClick={(e) => { if (e.target === e.currentTarget) setIsAddOpen(false); }}>
-                    <div className="bg-[#1a2235] border border-white/10 w-full max-w-md rounded-2xl p-8 shadow-2xl">
+                <div 
+                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm cursor-pointer" 
+                    onClick={(e) => { if (e.target === e.currentTarget) setIsAddOpen(false); }}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+                            setIsAddOpen(false);
+                        }
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    aria-label="Đóng cửa sổ"
+                >
+                    <div className="bg-[#1a2235] border border-white/10 w-full max-w-md rounded-2xl p-8 shadow-2xl cursor-default" onClick={e => e.stopPropagation()} onKeyDown={e => e.stopPropagation()}>
                         <div className="flex items-center justify-between mb-6">
                             <h3 className="text-xl font-black text-white">Thêm khách hàng mới</h3>
                             <button onClick={() => setIsAddOpen(false)} className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-slate-400 transition-colors">
@@ -249,8 +260,19 @@ export default function CustomerClient({ customers: initialCustomers }: Props) {
 
             {/* Edit Modal */}
             {isEditOpen && selectedCustomer && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" onClick={(e) => { if (e.target === e.currentTarget) setIsEditOpen(false); }}>
-                    <div className="bg-[#1a2235] border border-white/10 w-full max-w-md rounded-2xl p-8 shadow-2xl">
+                <div 
+                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm cursor-pointer" 
+                    onClick={(e) => { if (e.target === e.currentTarget) setIsEditOpen(false); }}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+                            setIsEditOpen(false);
+                        }
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    aria-label="Đóng cửa sổ"
+                >
+                    <div className="bg-[#1a2235] border border-white/10 w-full max-w-md rounded-2xl p-8 shadow-2xl cursor-default" onClick={e => e.stopPropagation()} onKeyDown={e => e.stopPropagation()}>
                         <div className="flex items-center justify-between mb-6">
                             <h3 className="text-xl font-black text-white">Chỉnh sửa thông tin</h3>
                             <button onClick={() => setIsEditOpen(false)} className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-slate-400 transition-colors">
@@ -295,8 +317,19 @@ export default function CustomerClient({ customers: initialCustomers }: Props) {
 
             {/* Delete Confirm */}
             {confirmDeleteId && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" onClick={() => setConfirmDeleteId(null)}>
-                    <div className="bg-[#1a2235] border border-white/10 w-full max-w-sm rounded-3xl p-8 text-center shadow-2xl" onClick={e => e.stopPropagation()}>
+                <div 
+                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm cursor-pointer" 
+                    onClick={() => setConfirmDeleteId(null)}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+                            setConfirmDeleteId(null);
+                        }
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    aria-label="Đóng cửa sổ"
+                >
+                    <div className="bg-[#1a2235] border border-white/10 w-full max-w-sm rounded-3xl p-8 text-center shadow-2xl cursor-default" onClick={e => e.stopPropagation()} onKeyDown={e => e.stopPropagation()}>
                         <div className="w-16 h-16 rounded-full bg-rose-500/10 border border-rose-500/20 mx-auto flex items-center justify-center text-rose-500 mb-6">
                             <span className="material-symbols-outlined text-3xl">person_remove</span>
                         </div>
