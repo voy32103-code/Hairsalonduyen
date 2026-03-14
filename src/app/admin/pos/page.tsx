@@ -4,6 +4,7 @@ import PageHeader from '@/components/ui/PageHeader';
 import POSLayout from '@/components/pos/POSLayout';
 import { getAppointmentsData } from '@/data/appointments';
 import { getActiveServices } from '@/data/services';
+import { getPrepaidPackages } from '@/actions/packages';
 import pool from '@/lib/db';
 import { cookies } from 'next/headers';
 
@@ -16,6 +17,9 @@ export default async function POSPage() {
     // Fetch products
     const productsRes = await pool.query('SELECT * FROM inventory ORDER BY product_name ASC');
     const products = productsRes.rows;
+
+    // Fetch packages
+    const packages = await getPrepaidPackages();
 
     const cookieStore = await cookies();
     const userRole = cookieStore.get('user_role')?.value || 'admin';
@@ -52,6 +56,7 @@ export default async function POSPage() {
                     appointments={checkoutableAppointments} 
                     services={activeServices} 
                     products={products} 
+                    packages={packages}
                 />
             </div>
         </div>

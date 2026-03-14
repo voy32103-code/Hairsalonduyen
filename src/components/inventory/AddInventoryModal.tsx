@@ -34,7 +34,18 @@ export default function AddInventoryModal() {
             </button>
 
             {isOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" onClick={(e) => { if (e.target === e.currentTarget) setIsOpen(false); }}>
+                <div 
+                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm cursor-pointer" 
+                    onClick={(e) => { if (e.target === e.currentTarget) setIsOpen(false); }}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+                            if (e.target === e.currentTarget) setIsOpen(false);
+                        }
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    aria-label="Đóng cửa sổ"
+                >
                     <div className="glass-card w-full max-w-md rounded-2xl border border-white/10 shadow-2xl p-8">
                         <div className="flex items-center justify-between mb-8">
                             <div>
@@ -59,9 +70,15 @@ export default function AddInventoryModal() {
                                     <input type="number" name="minStock" required min="0" placeholder="5" className="w-full bg-slate-900/70 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:border-primary outline-none transition-colors" />
                                 </div>
                             </div>
-                            <div className="space-y-1.5">
-                                <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Đơn giá (VNĐ)</label>
-                                <input type="number" name="price" required min="0" placeholder="320000" className="w-full bg-slate-900/70 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:border-primary outline-none transition-colors" />
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-1.5">
+                                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Đơn giá (VNĐ)</label>
+                                    <input type="number" name="price" required min="0" placeholder="320000" className="w-full bg-slate-900/70 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:border-primary outline-none transition-colors" />
+                                </div>
+                                <div className="space-y-1.5">
+                                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Hạn sử dụng</label>
+                                    <input type="date" name="expiryDate" className="w-full bg-slate-900/70 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:border-primary outline-none transition-colors appearance-none" />
+                                </div>
                             </div>
 
                             {message && (

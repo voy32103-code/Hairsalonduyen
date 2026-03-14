@@ -12,10 +12,12 @@ export async function createInventoryItem(formData: FormData) {
         const quantity = parseInt(formData.get('quantity') as string);
         const minStock = parseInt(formData.get('minStock') as string);
         const price = parseFloat(formData.get('price') as string);
+        const expiryDateStr = formData.get('expiryDate') as string;
+        const expiryDate = expiryDateStr ? new Date(expiryDateStr) : null;
 
         await pool.query(
-            'INSERT INTO inventory (product_name, quantity, min_stock, unit_price) VALUES ($1, $2, $3, $4)',
-            [title, quantity, minStock, price]
+            'INSERT INTO inventory (product_name, quantity, min_stock, unit_price, expiry_date) VALUES ($1, $2, $3, $4, $5)',
+            [title, quantity, minStock, price, expiryDate]
         );
 
         if (quantity < minStock) {

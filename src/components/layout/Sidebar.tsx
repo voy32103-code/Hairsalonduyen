@@ -12,8 +12,10 @@ const ADMIN_NAV = [
             { href: '/admin/appointments', icon: 'calendar_month', label: 'Lịch hẹn' },
             { href: '/admin/customers', icon: 'person', label: 'Khách hàng' },
             { href: '/admin/employees', icon: 'group', label: 'Nhân viên' },
+            { href: '/admin/employees/kpi', icon: 'trending_up', label: 'KPI & Đánh giá' },
             { href: '/admin/employees/schedule', icon: 'event_note', label: 'Lịch làm việc' },
             { href: '/admin/employees/attendance', icon: 'assignment_turned_in', label: 'Chấm công' },
+            { href: '/admin/employees/leave', icon: 'flight_takeoff', label: 'Nghỉ phép' },
             { href: '/admin/services', icon: 'content_cut', label: 'Dịch vụ' },
             { href: '/admin/inventory', icon: 'inventory_2', label: 'Kho hàng' },
         ]
@@ -21,6 +23,8 @@ const ADMIN_NAV = [
     {
         section: 'Bán hàng & Thu ngân', items: [
             { href: '/admin/pos', icon: 'point_of_sale', label: 'POS - Tính tiền' },
+            { href: '/admin/pos/promo', icon: 'confirmation_number', label: 'Mã giảm giá' },
+            { href: '/admin/pos/packages', icon: 'card_membership', label: 'Gói dịch vụ' },
             { href: '/admin/finance/invoices', icon: 'receipt_long', label: 'Hóa đơn' },
         ]
     },
@@ -45,7 +49,9 @@ const STAFF_NAV = [
         section: 'Công việc', items: [
             { href: '/admin/appointments', icon: 'calendar_month', label: 'Lịch hẹn' },
             { href: '/admin/customers', icon: 'person', label: 'Khách hàng' },
+            { href: '/admin/employees/kpi', icon: 'trending_up', label: 'KPI Của tôi' },
             { href: '/admin/employees/schedule', icon: 'event_note', label: 'Lịch làm việc' },
+            { href: '/admin/employees/leave', icon: 'flight_takeoff', label: 'Nghỉ phép' },
             { href: '/admin/inventory', icon: 'inventory_2', label: 'Kho hàng' },
         ]
     },

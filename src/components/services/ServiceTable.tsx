@@ -117,8 +117,19 @@ export default function ServiceTable({ initialServices, userRole }: { initialSer
 
             {/* Modal */}
             {isModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" onClick={() => setIsModalOpen(false)}>
-                    <div className="glass-card w-full max-w-lg rounded-2xl border border-white/10 shadow-2xl p-8" onClick={e => e.stopPropagation()}>
+                <div 
+                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm cursor-pointer" 
+                    onClick={() => setIsModalOpen(false)}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+                            setIsModalOpen(false);
+                        }
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    aria-label="Đóng cửa sổ"
+                >
+                    <div className="glass-card w-full max-w-lg rounded-2xl border border-white/10 shadow-2xl p-8 cursor-default" onClick={e => e.stopPropagation()}>
                         <div className="flex items-center justify-between mb-8">
                             <h3 className="text-2xl font-black text-white">{editItem ? 'Cập nhật Dịch vụ' : 'Thêm Dịch vụ mới'}</h3>
                             <button onClick={() => setIsModalOpen(false)} className="text-slate-500 hover:text-white"><span className="material-symbols-outlined text-2xl">close</span></button>

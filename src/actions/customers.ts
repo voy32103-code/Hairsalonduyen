@@ -2,15 +2,11 @@
 
 import pool from '@/lib/db';
 import { revalidatePath } from 'next/cache';
-import { getSessionUser } from '@/lib/auth';
+import { authorize } from '@/lib/auth';
 
 export async function createCustomer(formData: FormData) {
     try {
-        const sessionUser = await getSessionUser();
-        if (!sessionUser) throw new Error('Unauthorized');
-
-        // Check permission if needed, but usually staff can create customers
-        // For now, let's assume any logged in user can stay consistent with general hair salon flow
+        await authorize('customers', 'create');
 
         const fullName = formData.get('fullName') as string;
         const phone = formData.get('phone') as string;
@@ -34,8 +30,7 @@ export async function createCustomer(formData: FormData) {
 
 export async function updateCustomer(formData: FormData) {
     try {
-        const sessionUser = await getSessionUser();
-        if (!sessionUser) throw new Error('Unauthorized');
+        await authorize('customers', 'edit');
 
         const id = formData.get('id') as string;
         const fullName = formData.get('fullName') as string;
@@ -60,10 +55,7 @@ export async function updateCustomer(formData: FormData) {
 
 export async function deleteCustomer(id: string) {
     try {
-        const sessionUser = await getSessionUser();
-        if (!sessionUser || sessionUser.role !== 'admin') {
-            return { success: false, message: 'Chỉ Admin mới có quyền xoá khách hàng.' };
-        }
+        await authorize('customers', 'delete');
 
         await pool.query('DELETE FROM customers WHERE id = $1', [id]);
 

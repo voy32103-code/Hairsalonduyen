@@ -28,8 +28,17 @@ export default function AdminLayoutClient({
                 {/* Mobile Backdrop */}
                 {isSidebarOpen && (
                     <div 
-                        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
+                        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden cursor-pointer"
                         onClick={() => setIsSidebarOpen(false)}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                setIsSidebarOpen(false);
+                            }
+                        }}
+                        role="button"
+                        tabIndex={0}
+                        aria-label="Close sidebar"
                     />
                 )}
 

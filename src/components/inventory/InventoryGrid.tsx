@@ -42,15 +42,46 @@ export default function InventoryGrid({ items: initialItems, userRole = 'admin' 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {items.length > 0 ? items.map((item) => {
                     const isLow = item.quantity < item.min_stock;
+                    
+                    let expiryStatus: 'ok' | 'warning' | 'expired' = 'ok';
+                    let expiryDays = 999;
+                    if (item.expiry_date) {
+                        const expDate = new Date(item.expiry_date);
+                        const diffTime = expDate.getTime() - new Date().getTime();
+                        expiryDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                        if (expiryDays < 0) expiryStatus = 'expired';
+                        else if (expiryDays <= 30) expiryStatus = 'warning';
+                    }
+
                     return (
-                        <div key={item.id} className={`glass-card rounded-xl p-5 border transition-all hover:scale-[1.02] group ${isLow ? 'border-rose-500/30' : 'border-white/5'}`}>
+                        <div key={item.id} className={`glass-card rounded-xl p-5 border transition-all hover:scale-[1.02] group ${
+                            expiryStatus === 'expired' ? 'border-rose-500/50' :
+                            expiryStatus === 'warning' ? 'border-amber-500/50' :
+                            isLow ? 'border-rose-500/30' : 'border-white/5'
+                        }`}>
                             <div className="flex justify-between items-start mb-4">
-                                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${isLow ? 'bg-rose-500/10' : 'bg-primary/10'}`}>
-                                    <span className={`material-symbols-outlined text-2xl ${isLow ? 'text-rose-400' : 'text-primary'}`}>inventory_2</span>
+                                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                                    expiryStatus === 'expired' ? 'bg-rose-500/20' : 
+                                    expiryStatus === 'warning' ? 'bg-amber-500/20' : 
+                                    isLow ? 'bg-rose-500/10' : 'bg-primary/10'
+                                }`}>
+                                    <span className={`material-symbols-outlined text-2xl ${
+                                        expiryStatus === 'expired' ? 'text-rose-400' : 
+                                        expiryStatus === 'warning' ? 'text-amber-400' : 
+                                        isLow ? 'text-rose-400' : 'text-primary'
+                                    }`}>inventory_2</span>
                                 </div>
-                                {isLow && (
-                                    <span className="px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-400 text-[10px] font-black border border-rose-500/20">SẮP HẾT</span>
-                                )}
+                                <div className="flex flex-col gap-1 items-end">
+                                    {isLow && (
+                                        <span className="px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-400 text-[10px] font-black border border-rose-500/20">SẮP HẾT</span>
+                                    )}
+                                    {expiryStatus === 'expired' && (
+                                        <span className="px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-400 text-[10px] font-black border border-rose-500/20">HẾT HẠN</span>
+                                    )}
+                                    {expiryStatus === 'warning' && (
+                                        <span className="px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 text-[10px] font-black border border-amber-500/20">CẬN DATE</span>
+                                    )}
+                                </div>
                             </div>
                             <h3 className="font-bold text-slate-100 text-sm mb-1 line-clamp-2">{item.product_name}</h3>
                             <p className="text-xs text-slate-500 mb-4">{formatCurrency(item.unit_price)} / đơn vị</p>
@@ -61,8 +92,14 @@ export default function InventoryGrid({ items: initialItems, userRole = 'admin' 
                                     <p className={`text-2xl font-black ${isLow ? 'text-rose-400' : 'text-white'}`}>{item.quantity}</p>
                                 </div>
                                 <div className="text-right">
-                                    <p className="text-xs text-slate-500">Tối thiểu</p>
-                                    <p className="text-lg font-bold text-slate-400">{item.min_stock}</p>
+                                    <p className="text-xs text-slate-500">Hạn sử dụng</p>
+                                    <p className={`text-sm font-bold truncate max-w-[100px] ${
+                                        expiryStatus === 'expired' ? 'text-rose-400' : 
+                                        expiryStatus === 'warning' ? 'text-amber-400' : 
+                                        'text-slate-300'
+                                    }`}>
+                                        {item.expiry_date ? new Date(item.expiry_date).toLocaleDateString('vi-VN') : 'Không có'}
+                                    </p>
                                 </div>
                             </div>
                             <div className="flex border-t border-white/5 p-4 justify-between items-center bg-white/[0.02]">
@@ -100,8 +137,19 @@ export default function InventoryGrid({ items: initialItems, userRole = 'admin' 
 
             {/* Edit Quantity Modal */}
             {editItem && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm" onClick={() => setEditItem(null)}>
-                    <div className="glass-card w-full max-w-sm rounded-2xl border border-white/10 p-8" onClick={e => e.stopPropagation()}>
+                <div 
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm cursor-pointer" 
+                    onClick={() => setEditItem(null)}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+                            setEditItem(null);
+                        }
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    aria-label="Đóng cửa sổ"
+                >
+                    <div className="glass-card w-full max-w-sm rounded-2xl border border-white/10 p-8 cursor-default" onClick={e => e.stopPropagation()}>
                         <div className="flex items-center justify-between mb-6">
                             <h3 className="text-xl font-black text-white">Cập nhật số lượng</h3>
                             <button onClick={() => setEditItem(null)} className="text-slate-500 hover:text-white"><span className="material-symbols-outlined">close</span></button>
@@ -130,8 +178,19 @@ export default function InventoryGrid({ items: initialItems, userRole = 'admin' 
 
             {/* Delete Confirm */}
             {confirmDeleteId && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm" onClick={() => setConfirmDeleteId(null)}>
-                    <div className="glass-card w-full max-w-sm rounded-2xl border border-white/10 p-8 text-center" onClick={e => e.stopPropagation()}>
+                <div 
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm cursor-pointer" 
+                    onClick={() => setConfirmDeleteId(null)}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+                            setConfirmDeleteId(null);
+                        }
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    aria-label="Đóng cửa sổ"
+                >
+                    <div className="glass-card w-full max-w-sm rounded-2xl border border-white/10 p-8 text-center cursor-default" onClick={e => e.stopPropagation()}>
                         <span className="material-symbols-outlined text-5xl text-rose-400 mb-4 block">delete_forever</span>
                         <h3 className="text-xl font-black text-white mb-2">Xóa sản phẩm?</h3>
                         <p className="text-slate-400 text-sm mb-6">Thao tác này không thể hoàn tác.</p>

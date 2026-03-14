@@ -69,7 +69,10 @@ export default function PayrollTable({
         }
     }
 
-    const totalNetPay = initialPayroll.reduce((acc, p) => acc + Number(p.net_pay), 0);
+    const calculateNetPay = (p: any) => 
+        Number(p.base_salary || 0) + Number(p.bonus || 0) + Number(p.total_commission || 0) - Number(p.deductions || 0);
+
+    const totalNetPay = initialPayroll.reduce((acc, p) => acc + calculateNetPay(p), 0);
 
     return (
         <div>
@@ -98,6 +101,7 @@ export default function PayrollTable({
                             <th className="p-4 text-xs font-black text-slate-500 uppercase tracking-widest">Nhân viên</th>
                             <th className="p-4 text-xs font-black text-slate-500 uppercase tracking-widest text-right">Lương CB</th>
                             <th className="p-4 text-xs font-black text-slate-500 uppercase tracking-widest text-right">Thưởng</th>
+                            <th className="p-4 text-xs font-black text-slate-500 uppercase tracking-widest text-right">Hoa hồng</th>
                             <th className="p-4 text-xs font-black text-slate-500 uppercase tracking-widest text-right">Khấu trừ</th>
                             <th className="p-4 text-xs font-black text-primary uppercase tracking-widest text-right">Thực lãnh</th>
                             <th className="p-4 text-xs font-black text-slate-500 uppercase tracking-widest text-center">Trạng thái</th>
@@ -120,8 +124,9 @@ export default function PayrollTable({
                                 </td>
                                 <td className="p-4 text-right text-sm text-slate-300">{formatCurrency(Number(p.base_salary))}</td>
                                 <td className="p-4 text-right text-sm text-green-400">+{formatCurrency(Number(p.bonus))}</td>
+                                <td className="p-4 text-right text-sm text-green-400">+{formatCurrency(Number(p.total_commission || 0))}</td>
                                 <td className="p-4 text-right text-sm text-rose-400">-{formatCurrency(Number(p.deductions))}</td>
-                                <td className="p-4 text-right font-black text-primary text-base">{formatCurrency(Number(p.net_pay))}</td>
+                                <td className="p-4 text-right font-black text-primary text-base">{formatCurrency(calculateNetPay(p))}</td>
                                 <td className="p-4 text-center">
                                     {p.status === 'paid' ? (
                                         <span className="px-2.5 py-1 rounded-full bg-green-500/10 text-green-400 text-xs font-bold border border-green-500/20">Đã thanh toán</span>
@@ -158,8 +163,19 @@ export default function PayrollTable({
             </div>
 
             {isModalOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" onClick={() => setIsModalOpen(false)}>
-                    <div className="glass-card w-full max-w-lg rounded-2xl border border-white/10 shadow-2xl p-8" onClick={e => e.stopPropagation()}>
+                <div 
+                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm cursor-pointer" 
+                    onClick={() => setIsModalOpen(false)}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+                            setIsModalOpen(false);
+                        }
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    aria-label="Đóng cửa sổ"
+                >
+                    <div className="glass-card w-full max-w-lg rounded-2xl border border-white/10 shadow-2xl p-8 cursor-default" onClick={e => e.stopPropagation()}>
                         <div className="flex items-center justify-between mb-8">
                             <div>
                                 <h3 className="text-2xl font-black text-white">{editItem ? 'Sửa bảng lương' : 'Chốt lương nhân viên'}</h3>
@@ -189,13 +205,21 @@ export default function PayrollTable({
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-1.5">
-                                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Thưởng chuyên cần/Doanh thu</label>
+                                    <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Thưởng chuyên cần/Khác</label>
                                     <input type="number" name="bonus" defaultValue={editItem?.bonus || 0} min="0" className="w-full bg-slate-900/70 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:border-primary outline-none transition-colors text-green-400" />
                                 </div>
                                 <div className="space-y-1.5">
                                     <label className="text-xs font-bold text-slate-400 uppercase tracking-wider">Khấu trừ/Phạt</label>
                                     <input type="number" name="deductions" defaultValue={editItem?.deductions || 0} min="0" className="w-full bg-slate-900/70 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm focus:border-primary outline-none transition-colors text-rose-400" />
                                 </div>
+                            </div>
+                            
+                            <div className="space-y-1.5 bg-white/5 p-4 rounded-xl border border-white/10">
+                                <div className="flex justify-between items-center text-sm">
+                                    <span className="text-slate-400">Hoa hồng tự động (tháng {currentMonth}):</span>
+                                    <span className="font-bold text-green-400">+{formatCurrency(editItem ? Number(editItem.total_commission || 0) : 0)}</span>
+                                </div>
+                                <p className="text-[10px] text-slate-500 mt-1">*Tiền hoa hồng được tính tự động từ các hóa đơn dịch vụ đã thanh toán do nhân viên trực tiếp thực hiện trong tháng. Không thể chỉnh sửa thủ công tại đây.</p>
                             </div>
                             
                             <div className="space-y-1.5">

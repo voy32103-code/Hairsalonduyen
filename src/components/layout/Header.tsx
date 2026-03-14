@@ -208,7 +208,7 @@ export default function Header({
                             {notifs.length > 0 ? (
                                 <div className="divide-y divide-white/5 max-h-72 overflow-y-auto">
                                     {notifs.map(n => (
-                                        <div 
+                                        <button 
                                             key={n.id} 
                                             onClick={() => {
                                                 if (n.link) {
@@ -216,16 +216,16 @@ export default function Header({
                                                     setShowNotifs(false);
                                                 }
                                             }}
-                                            className="px-5 py-4 flex gap-3 hover:bg-white/5 cursor-pointer transition-colors"
+                                            className="w-full px-5 py-4 flex gap-3 hover:bg-white/5 cursor-pointer transition-colors text-left"
                                         >
                                             <div className="w-9 h-9 rounded-full bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">
                                                 <span className="material-symbols-outlined text-lg">{n.icon}</span>
                                             </div>
                                             <div className="flex-1 min-w-0">
-                                                <p className="text-sm text-slate-200 leading-snug">{n.text}</p>
-                                                <p className="text-xs text-slate-500 mt-0.5">{n.time}</p>
+                                                <p className="text-sm text-slate-200 leading-snug font-medium">{n.text}</p>
+                                                <p className="text-[10px] text-slate-500 mt-1">{n.time}</p>
                                             </div>
-                                        </div>
+                                        </button>
                                     ))}
                                 </div>
                             ) : (

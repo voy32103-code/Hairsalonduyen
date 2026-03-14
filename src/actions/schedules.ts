@@ -33,9 +33,7 @@ export async function createSchedule(formData: FormData) {
 
 export async function updateScheduleStatus(id: string, status: string) {
     try {
-        // Here we might allow staff to mark themselves 'completed' or managers to mark 'absent'
-        // For simplicity, we authorize the 'edit' employees access, or if they own it.
-        // We'll trust the caller for now and verify they have employee access or it's their own id
+        await authorize('employees', 'edit');
         
         await pool.query(`
             UPDATE work_schedules 

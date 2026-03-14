@@ -43,10 +43,19 @@ export async function getDashboardData() {
         `);
 
         const staffRes = await pool.query(`
-          SELECT u.id, u.full_name, u.avatar_url, r.name as role, COUNT(i.id) as appt_count, SUM(i.total_amount) as revenue
+          SELECT 
+            u.id, 
+            u.full_name, 
+            u.avatar_url, 
+            r.name as role, 
+            COUNT(DISTINCT i.id) as appt_count, 
+            COALESCE(SUM(ii.quantity * ii.unit_price), 0) as revenue
           FROM users u
           JOIN roles r ON u.role_id = r.id
-          LEFT JOIN invoices i ON i.created_by = u.id AND i.status = 'paid'
+          LEFT JOIN invoice_items ii ON ii.staff_id = u.id
+          LEFT JOIN invoices i ON i.id = ii.invoice_id 
+            AND i.status = 'paid'
+            AND date_trunc('month', i.created_at) = date_trunc('month', current_date)
           GROUP BY u.id, u.full_name, u.avatar_url, r.name
           ORDER BY revenue DESC NULLS LAST LIMIT 5;
         `);
