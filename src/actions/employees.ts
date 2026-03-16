@@ -19,14 +19,15 @@ export async function createEmployee(formData: FormData) {
         if (roleRes.rows.length === 0) throw new Error('Role not found');
         const roleId = roleRes.rows[0].id;
 
-        await pool.query(
-            'INSERT INTO users (full_name, email, phone, role_id) VALUES ($1, $2, $3, $4)',
+        const res = await pool.query(
+            'INSERT INTO users (full_name, email, phone, role_id) VALUES ($1, $2, $3, $4) RETURNING id',
             [fullName, email, phone, roleId]
         );
+        const newUserId = res.rows[0].id;
 
         broadcastSSE('new_employee', { name: fullName });
         revalidatePath('/admin/employees');
-        return { success: true };
+        return { success: true, userId: newUserId };
     } catch (error) {
         console.error('Failed to create employee:', error);
         return { success: false, message: 'Lỗi khi thêm nhân viên.' };

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { updateSettings } from '@/actions/settings';
+import FaceCapture from '@/components/attendance/FaceCapture';
 
 interface UserProfile {
     id: string;
@@ -11,6 +12,7 @@ interface UserProfile {
     phone: string;
     avatar_url: string | null;
     role: string;
+    has_face: boolean;
 }
 
 export default function SettingsForm({ userProfile }: { userProfile: UserProfile | null }) {
@@ -22,6 +24,34 @@ export default function SettingsForm({ userProfile }: { userProfile: UserProfile
         email: userProfile?.email || 'admin@duyenhairsalon.vn',
         phone: userProfile?.phone || '0372999667',
     });
+
+    const [showFaceCapture, setShowFaceCapture] = useState(false);
+    const [faceMessage, setFaceMessage] = useState('');
+
+    const handleFaceCapture = async (descriptorArray: number[]) => {
+        if (!userProfile?.id) return;
+        try {
+            setFaceMessage('Đang lưu dữ liệu khuôn mặt...');
+            const res = await fetch(`/api/staff/${userProfile.id}/face`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ faceDescriptor: descriptorArray }),
+            });
+            const data = await res.json();
+            if (data.success) {
+                setFaceMessage('✅ Cập nhật khuôn mặt thành công! Bạn có thể tải lại trang chờ cập nhật.');
+                setTimeout(() => {
+                    setShowFaceCapture(false);
+                    setFaceMessage('');
+                    router.refresh();
+                }, 2000);
+            } else {
+                setFaceMessage(`❌ ${data.message || 'Lỗi khi lưu'}`);
+            }
+        } catch (err) {
+            setFaceMessage('❌ Lỗi hệ thống khi lưu khuôn mặt');
+        }
+    };
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
@@ -57,8 +87,54 @@ export default function SettingsForm({ userProfile }: { userProfile: UserProfile
                     <h3 className="text-xl font-black text-white">{form.fullName}</h3>
                     <p className="text-slate-400 text-sm mt-1 capitalize">{userProfile?.role || 'admin'} · DuyenHairSalon</p>
                     <p className="text-xs text-slate-500 mt-2">Avatar được tạo tự động từ tên</p>
+                    {userProfile?.has_face ? (
+                        <button
+                            type="button"
+                            onClick={() => setShowFaceCapture(true)}
+                            className="mt-4 px-4 py-2 bg-green-500/10 text-green-400 border border-green-500/20 rounded-lg text-sm font-semibold hover:bg-green-500/20 transition-all flex items-center gap-2"
+                        >
+                            <span className="material-symbols-outlined text-[18px]">check_circle</span>
+                            Đã đăng ký (Cập nhật lại)
+                        </button>
+                    ) : (
+                        <button
+                            type="button"
+                            onClick={() => setShowFaceCapture(true)}
+                            className="mt-4 px-4 py-2 bg-primary/20 text-primary border border-primary/30 rounded-lg text-sm font-semibold hover:bg-primary/30 transition-all flex items-center gap-2"
+                        >
+                            <span className="material-symbols-outlined text-[18px]">face_retouching_natural</span>
+                            Đăng ký khuôn mặt
+                        </button>
+                    )}
                 </div>
             </div>
+
+            {/* Face Capture Overlay */}
+            {showFaceCapture && (
+                <div className="fixed inset-0 z-[100] bg-background-dark/90 backdrop-blur-sm flex items-center justify-center p-4">
+                    <div className="bg-slate-900 border border-white/10 rounded-2xl p-6 w-full max-w-xl shadow-2xl relative">
+                        <button
+                            type="button"
+                            onClick={() => setShowFaceCapture(false)}
+                            className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors"
+                        >
+                            <span className="material-symbols-outlined">close</span>
+                        </button>
+                        
+                        <h3 className="text-xl font-black text-white mb-6 text-center">Đăng ký khuôn mặt cá nhân</h3>
+                        
+                        <div className="bg-black/50 rounded-xl overflow-hidden mb-4">
+                             <FaceCapture onCapture={handleFaceCapture} />
+                        </div>
+
+                        {faceMessage && (
+                            <div className={`p-4 rounded-xl text-center font-bold text-sm ${faceMessage.includes('✅') ? 'bg-green-500/20 text-green-400 border border-green-500/30' : 'bg-rose-500/20 text-rose-400 border border-rose-500/30'}`}>
+                                {faceMessage}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
 
             {/* Profile fields */}
             <div className="glass-card rounded-2xl border border-white/5 p-8 space-y-6">

@@ -104,7 +104,11 @@ function LoginForm() {
             </form>
 
             <div className="mt-8 pt-6 border-t border-white/5 text-center space-y-4">
-                <p className="text-slate-500 text-xs">
+                <Link href="/checkin" className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-white/5 text-primary font-bold hover:bg-white/10 transition-colors border border-primary/20">
+                    <span className="material-symbols-outlined text-xl">face_retouching_natural</span>
+                    Trạm Chấm Công Khuôn Mặt
+                </Link>
+                <p className="text-slate-500 text-xs mt-4">
                     Chưa có tài khoản?{' '}
                     <Link href="/register" className="text-primary font-bold hover:underline">
                         Đăng ký ngay

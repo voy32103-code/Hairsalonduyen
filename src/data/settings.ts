@@ -11,7 +11,7 @@ export async function getSettingsData() {
         }
 
         const userRes = await pool.query(`
-            SELECT u.id, u.full_name, u.email, u.phone, u.avatar_url, r.name as role
+            SELECT u.id, u.full_name, u.email, u.phone, u.avatar_url, r.name as role, (u.face_descriptor IS NOT NULL) as has_face
             FROM users u
             JOIN roles r ON u.role_id = r.id
             WHERE u.id = $1
