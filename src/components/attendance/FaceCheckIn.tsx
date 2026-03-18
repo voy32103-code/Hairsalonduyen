@@ -145,8 +145,8 @@ export default function FaceCheckIn({ onCheckInSuccess, cooldownSeconds = 5 }: F
              // Avoid flickering "unknown" constantly unless we want to show it
              if (status !== 'unknown' && !isCooldownRef.current) {
                  setStatus('unknown');
-                 setMessage('Chưa nhận diện được...');
-                 setTimeout(() => { if (!isCooldownRef.current) setStatus('scanning'); }, 2000);
+                 setMessage('Lỗi: Nhận diện khuôn mặt không chính xác');
+                 setTimeout(() => { if (!isCooldownRef.current) setStatus('scanning'); }, 3000);
              }
          }
       }
@@ -199,14 +199,14 @@ export default function FaceCheckIn({ onCheckInSuccess, cooldownSeconds = 5 }: F
       </div>
 
       {/* Match Status indicator */}
-      <div className={`mt-4 sm:mt-6 px-4 sm:px-8 py-3 sm:py-4 rounded-2xl flex items-center space-x-3 sm:space-x-4 transition-all duration-500 transform ${status === 'matched' ? 'bg-green-500/20 shadow-[0_0_30px_rgba(34,197,94,0.2)] border border-green-500/50 translate-y-0 opacity-100' : 'bg-white/5 border border-white/10 opacity-60 translate-y-2 sm:translate-y-4'} ${status === 'scanning' && 'animate-pulse'}`}>
+      <div className={`mt-4 sm:mt-6 px-4 sm:px-8 py-3 sm:py-4 rounded-2xl flex items-center space-x-3 sm:space-x-4 transition-all duration-500 transform ${status === 'matched' ? 'bg-green-500/20 shadow-[0_0_30px_rgba(34,197,94,0.2)] border border-green-500/50 translate-y-0 opacity-100' : status === 'unknown' ? 'bg-red-500/20 shadow-[0_0_30px_rgba(239,68,68,0.2)] border border-red-500/50 translate-y-0 opacity-100' : 'bg-white/5 border border-white/10 opacity-60 translate-y-2 sm:translate-y-4'} ${status === 'scanning' && 'animate-pulse'}`}>
          {status === 'matched' ? (
              <UserCheck className="w-5 h-5 sm:w-6 sm:h-6 text-green-400" />
          ) : (
-             <Focus className={`w-5 h-5 sm:w-6 sm:h-6 ${status === 'scanning' ? 'text-primary' : 'text-white/40'}`} />
+             <Focus className={`w-5 h-5 sm:w-6 sm:h-6 ${status === 'scanning' ? 'text-primary' : status === 'unknown' ? 'text-red-400' : 'text-white/40'}`} />
          )}
-         <span className={`text-sm sm:text-lg font-medium tracking-wide ${status === 'matched' ? 'text-green-400' : 'text-white/80'}`}>
-            {status === 'matched' ? `Xin chào, ${matchedName}` : status === 'scanning' ? 'Đang Nhận Diện...' : 'Đợi...'}
+         <span className={`text-sm sm:text-lg font-medium tracking-wide ${status === 'matched' ? 'text-green-400' : status === 'unknown' ? 'text-red-400' : 'text-white/80'}`}>
+            {status === 'matched' ? `Xin chào, ${matchedName}` : status === 'scanning' ? 'Đang Nhận Diện...' : status === 'unknown' ? 'Không khớp dữ liệu' : 'Đợi...'}
          </span>
       </div>
 
